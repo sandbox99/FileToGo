@@ -1,14 +1,70 @@
-<DOCTYPE html>
+<!DOCTYPE html>
 <html>
 	<head>
+		<meta charset="utf-8">
 		<title>Hello</title>
+		<style type="text/css">body,input{font-family:Microsoft Yahei;}
+		.line{padding:10px;border-bottom:1px solid lightgreen;}
+		form{float:left;}
+		.container{width:800px;margin:20px auto;}
+		iframe{height:23px;margin-left: 20px;width:446px;}
+		input#btnAdd{margin: 10px 0 0 10px;}
+		</style>
+		<script type="text/javascript">
+			var idx=2;
+			function doInit(){
+				document.getElementById("btnAdd").onclick=function(){
+					var divs=document.getElementsByTagName("div");
+					for(var i=0;i<divs.length;i++){
+						var cur=divs[i];
+						if(cur.className=='line'){
+							appendAnother();
+							break;
+						}
+					}
+				};
+			}
+			function appendAnother(){
+				idx+=1;
+				var frag=document.createDocumentFragment();
+				var line=document.createElement("div");
+				line.className="line";
+				frag.appendChild(line);
+				var form=document.createElement("form");
+				line.appendChild(form);
+				form.action="upload";form.method="POST";form.target="fresult"+idx;form.enctype="multipart/form-data";
+				var input1=document.createElement("input"),input2=document.createElement("input");
+				form.appendChild(input1);form.appendChild(input2);
+				input1.type="file";input2.type="submit";
+				input1.name="file1";
+				var mframe=document.createElement("iframe");
+				line.appendChild(mframe);mframe.id="fresult"+idx;
+				mframe.name="fresult"+idx;mframe.src="blank";mframe.frameBorder=0;mframe.scrolling="no";mframe.marginHeight="0";
+				mframe.marginWidth="0";
+				console.log(frag);
+				var btn=document.getElementById("btnAdd");
+				btn.parentNode.insertBefore(frag,btn);
+				
+			}
+		</script>
 	</head>
-	<body>
-		Hello World!
-		<form action="upload" method="POST" target="fresult" enctype="multipart/form-data">
-			<input type="file" name="file1">
-			<input type="submit">
-		</form>
-		<iframe id="fresult"></iframe>
+	<body onload="doInit()">
+		<div class="container">
+			<div class="line">
+				<form action="upload" method="POST" target="fresult" enctype="multipart/form-data">
+					<input type="file" name="file1">
+					<input type="submit">
+				</form>
+				<iframe name="fresult" id="fresult" src="blank" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe>
+			</div>
+			<div class="line">
+				<form action="upload" method="POST" target="fresult2" enctype="multipart/form-data">
+					<input type="file" name="file1">
+					<input type="submit">
+				</form>
+				<iframe name="fresult2" id="fresult2" src="blank" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe>
+			</div>
+			<input type="button" id="btnAdd" value="添加">
+		</div>
 	</body>
 </html>

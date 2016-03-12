@@ -16,14 +16,7 @@
 			var idx=2;
 			function doInit(){
 				document.getElementById("btnAdd").onclick=function(){
-					var divs=document.getElementsByTagName("div");
-					for(var i=0;i<divs.length;i++){
-						var cur=divs[i];
-						if(cur.className=='line'){
-							appendAnother();
-							break;
-						}
-					}
+					appendAnother();
 				};
 			}
 			function appendAnother(){

@@ -12,6 +12,7 @@ import (
 func main(){
 	
 	http.HandleFunc("/upload",doUpload)
+	http.HandleFunc("/blank",showBlankPage)
 	http.HandleFunc("/",showUploadPage)
 	
 	fmt.Println("Will listen at port 9999")
@@ -33,11 +34,22 @@ func showUploadPage(res http.ResponseWriter, request *http.Request){
 		"Content-Type",
 		"text/html",
 	)
-	readPageContent(res)
+	io.WriteString(res, UPLOAD_PAGE_CONT)
+	
+	//we can read page content from resource/index.html when develop
+	//readPageContent(res)
+}
+
+func showBlankPage(res http.ResponseWriter, request *http.Request){
+	res.Header().Set(
+		"Content-Type",
+		"text/html",
+	)
+	io.WriteString(res, wrapSimpleHtml(""))
 }
 
 func doUpload(res http.ResponseWriter, request *http.Request){
-	fmt.Println("========call doUpload========")
+	log.Println("========call doUpload========")
 	
 	res.Header().Set(
 		"Content-Type",
@@ -56,21 +68,21 @@ func doUpload(res http.ResponseWriter, request *http.Request){
 		return
 	}else{
 		destfilename:=header.Filename
-		fmt.Println("File name is:",destfilename)
+		log.Println("File name is:",destfilename)
 		destfile,err:=os.Create(destfilename)
 		if err!=nil{
-			fmt.Println("create file failed:", err, destfilename)
+			log.Fatalln("create file failed:", err, destfilename)
 			io.WriteString(res,wrapSimpleHtml("发生了错误:"+err.Error()))
 			return
 		}
 		defer destfile.Close()
 		cnt,err:=io.Copy(destfile,file)
 		if err!=nil{
-			fmt.Println("Error while call Copy:",err)
+			log.Fatalln("Error while call Copy:",err)
 			io.WriteString(res,wrapSimpleHtml("发生了错误"))
 			return
 		}
-		fmt.Println("Written",cnt,"bytes")
+		log.Println("Written",cnt,"bytes")
 		io.WriteString(res,wrapSimpleHtml(fmt.Sprintf("成功(%d bytes)",cnt)))
 	}
 }
@@ -88,8 +100,7 @@ func wrapSimpleHtml(str string) string{
 }
 
 //value from file resource/index.html
-const UPLOAD_PAGE_CONT=`
-<!DOCTYPE html>
+const UPLOAD_PAGE_CONT=`<!DOCTYPE html>
 <html>
 	<head>
 		<meta charset="utf-8">
@@ -107,14 +118,7 @@ const UPLOAD_PAGE_CONT=`
 			var idx=2;
 			function doInit(){
 				document.getElementById("btnAdd").onclick=function(){
-					var divs=document.getElementsByTagName("div");
-					for(var i=0;i<divs.length;i++){
-						var cur=divs[i];
-						if(cur.className=='line'){
-							appendAnother();
-							break;
-						}
-					}
+					appendAnother();
 				};
 			}
 			function appendAnother(){

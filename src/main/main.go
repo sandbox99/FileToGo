@@ -3,44 +3,80 @@ package main
 import (
 	"fmt"
 	"io"
-	"os"
-	"strings"
-	"net/http"
 	"log"
+	"net"
+	"net/http"
+	"os"
+	"regexp"
+	"strings"
 )
 
-func main(){
-	
-	http.HandleFunc("/upload",doUpload)
-	http.HandleFunc("/blank",showBlankPage)
-	http.HandleFunc("/",showUploadPage)
-	
-	fmt.Println("Will listen at port 9999")
-	log.Fatal(http.ListenAndServe(":9999", nil))
+var ipexp *regexp.Regexp
+
+func init() {
+	ipexp = regexp.MustCompile("([0-9]+\\.){3}\\d+")
 }
 
-func readPageContent(res http.ResponseWriter) (int64,error){
-	file,err:=os.Open("resource/index.html")
-	if err!=nil{
+func main() {
+
+	http.HandleFunc("/upload", doUpload)
+	http.HandleFunc("/blank", showBlankPage)
+	http.HandleFunc("/", showUploadPage)
+
+	port := 9999
+	addrs, err := getLocalAddresses()
+	if err != nil {
+		log.Printf("error getting local IP addresses, just ignore: %v\n", err)
+		log.Printf("will listen at port %d", port)
+	} else {
+		log.Printf("will listen at the folling addresses:\n")
+		for _, addr := range addrs {
+			log.Printf("  http://%s:%d/", addr, port)
+		}
+	}
+
+	log.Fatal(http.ListenAndServe(":9999", nil))
+	log.Println("ok")
+}
+
+func getLocalAddresses() ([]string, error) {
+	addrs, err := net.InterfaceAddrs()
+	if err != nil {
+		return nil, err
+	}
+
+	res := make([]string, 0)
+	for _, addr := range addrs {
+		t := ipexp.FindString(addr.String())
+		if t != "" {
+			res = append(res, t)
+		}
+	}
+	return res, nil
+}
+
+func readPageContent(res http.ResponseWriter) (int64, error) {
+	file, err := os.Open("resource/index.html")
+	if err != nil {
 		panic("read file failed.")
-		return 0,err
+		return 0, err
 	}
 	defer file.Close()
-	return io.Copy(res,file)
+	return io.Copy(res, file)
 }
 
-func showUploadPage(res http.ResponseWriter, request *http.Request){
+func showUploadPage(res http.ResponseWriter, request *http.Request) {
 	res.Header().Set(
 		"Content-Type",
 		"text/html",
 	)
 	io.WriteString(res, UPLOAD_PAGE_CONT)
-	
+
 	//we can read page content from resource/index.html when develop
 	//readPageContent(res)
 }
 
-func showBlankPage(res http.ResponseWriter, request *http.Request){
+func showBlankPage(res http.ResponseWriter, request *http.Request) {
 	res.Header().Set(
 		"Content-Type",
 		"text/html",
@@ -48,47 +84,47 @@ func showBlankPage(res http.ResponseWriter, request *http.Request){
 	io.WriteString(res, wrapSimpleHtml(""))
 }
 
-func doUpload(res http.ResponseWriter, request *http.Request){
+func doUpload(res http.ResponseWriter, request *http.Request) {
 	log.Println("========call doUpload========")
-	
+
 	res.Header().Set(
 		"Content-Type",
 		"text/html; charset=utf-8",
 	)
-	
-	if request.Method=="GET"{
-		io.WriteString(res,wrapSimpleHtml("url accepts method POST only"))
+
+	if request.Method == "GET" {
+		io.WriteString(res, wrapSimpleHtml("url accepts method POST only"))
 		return
 	}
-	
-	file,header,err:=request.FormFile("file1")
-	if err!=nil{
-		fmt.Println("Error while call FormFile",err)
-		io.WriteString(res,wrapSimpleHtml("发生了错误"))
+
+	file, header, err := request.FormFile("file1")
+	if err != nil {
+		fmt.Println("Error while call FormFile", err)
+		io.WriteString(res, wrapSimpleHtml("发生了错误"))
 		return
-	}else{
-		destfilename:=header.Filename
-		log.Println("File name is:",destfilename)
-		destfile,err:=os.Create(destfilename)
-		if err!=nil{
+	} else {
+		destfilename := header.Filename
+		log.Println("File name is:", destfilename)
+		destfile, err := os.Create(destfilename)
+		if err != nil {
 			log.Fatalln("create file failed:", err, destfilename)
-			io.WriteString(res,wrapSimpleHtml("发生了错误:"+err.Error()))
+			io.WriteString(res, wrapSimpleHtml("发生了错误:"+err.Error()))
 			return
 		}
 		defer destfile.Close()
-		cnt,err:=io.Copy(destfile,file)
-		if err!=nil{
-			log.Fatalln("Error while call Copy:",err)
-			io.WriteString(res,wrapSimpleHtml("发生了错误"))
+		cnt, err := io.Copy(destfile, file)
+		if err != nil {
+			log.Fatalln("Error while call Copy:", err)
+			io.WriteString(res, wrapSimpleHtml("发生了错误"))
 			return
 		}
-		log.Println("Written",cnt,"bytes")
-		io.WriteString(res,wrapSimpleHtml(fmt.Sprintf("成功(%d bytes)",cnt)))
+		log.Println("Written", cnt, "bytes")
+		io.WriteString(res, wrapSimpleHtml(fmt.Sprintf("成功(%d bytes)", cnt)))
 	}
 }
 
-func wrapSimpleHtml(str string) string{
-	var template string=`<!DOCTYPE html>
+func wrapSimpleHtml(str string) string {
+	var template string = `<!DOCTYPE html>
 <html>
 	<head>
 		<title></title>
@@ -96,11 +132,11 @@ func wrapSimpleHtml(str string) string{
 	</head>
 	<body>MSG</body>
 </html>`
-	return strings.Replace(template,"MSG",str,1)
+	return strings.Replace(template, "MSG", str, 1)
 }
 
 //value from file resource/index.html
-const UPLOAD_PAGE_CONT=`<!DOCTYPE html>
+const UPLOAD_PAGE_CONT = `<!DOCTYPE html>
 <html>
 	<head>
 		<meta charset="utf-8">

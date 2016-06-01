@@ -5,4 +5,4 @@ visit its uploading page from other machines to transfer files to it, no needing
 
 Although it was built with Go, you can run it without Go environment.
 
-![run demo](./src/main/resource/demo.jsp?raw=true)
+![run demo](./src/main/resource/demo.jpg?raw=true)

@@ -29,7 +29,7 @@ func main() {
 		log.Printf("error getting local IP addresses, just ignore: %v\n", err)
 		log.Printf("will listen at port %d", port)
 	} else {
-		log.Printf("will listen at the folling addresses:\n")
+		log.Printf("will listen at the following addresses:\n")
 		for _, addr := range addrs {
 			log.Printf("  http://%s:%d/", addr, port)
 		}

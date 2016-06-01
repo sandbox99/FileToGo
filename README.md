@@ -4,3 +4,5 @@ This is a small but practically useful tool for setting up a web server on a mac
 visit its uploading page from other machines to transfer files to it, no needing resorting to ftp, sftp, rsync, QQ, etc.
 
 Although it was built with Go, you can run it without Go environment.
+
+![run demo](./src/main/resource/demo.jsp?raw=true)

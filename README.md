@@ -21,7 +21,7 @@ Start the executable file on the machine you want transfer files to:
 
 Once it started up successfully, you can upload files from other machines. Navigate your browser to the url <code>http://<server ip>:9999/</code>
 
-![run demo](./src/main/resource/demo.jpg?raw=true =600x)
+![run demo](./src/main/resource/demo.jpg?raw=true "demonstration"){width=600px}
 
 Users in favor of shell can upload file through curl as well:
 

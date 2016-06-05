@@ -21,7 +21,7 @@ Start the executable file on the machine you want transfer files to:
 
 Once it started up successfully, you can upload files from other machines. Navigate your browser to the url <code>http://<server ip>:9999/</code>
 
-<a href="/wyage/FileToGo/blob/master/src/main/resource/demo.jpg?raw=true" target="_blank"><img src="/wyage/FileToGo/raw/master/src/main/resource/demo.jpg?raw=true" alt="run demo" title="demonstration" style="width:600px;"></a>
+<a href="src/main/resource/demo.jpg?raw=true" target="_blank"><img src="src/main/resource/demo.jpg?raw=true" alt="run demo" title="demonstration" style="width:600px;"></a>
 
 Users in favor of shell can upload file through curl as well:
 

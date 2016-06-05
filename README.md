@@ -21,10 +21,10 @@ Start the executable file on the machine you want transfer files to:
 
 Once it started up successfully, you can upload files from other machines.
 
-Users in favor of shell can upload file through curl:
+Users in favor of shell can upload files through curl (replace the ip with your real ip):
 
-	curl -F file1=@my.txt http://<server ip>:9999/upload
+	curl -F file1=@my.txt http://192.168.1.112:9999/upload
 
-Or launch a browser and navigate to the url <code><pre>http://<server ip>:9999/</pre></code>.
+Or launch a browser and navigate to the url <code>http://192.168.1.112:9999/</code>.
 
 <a href="src/main/resource/demo.jpg?raw=true" target="_blank"><img src="src/main/resource/demo.jpg?raw=true" alt="run demo" title="demonstration" style="width:600px;"></a>

@@ -19,11 +19,12 @@ Start the executable file on the machine you want transfer files to:
 
 	fileToGo-win64.exe (or fileToGo on Unix system)
 
-Once it started up successfully, you can upload files from other machines. Navigate your browser to the url <code>http://<server ip>:9999/</code>
+Once it started up successfully, you can upload files from other machines.
 
-<a href="src/main/resource/demo.jpg?raw=true" target="_blank"><img src="src/main/resource/demo.jpg?raw=true" alt="run demo" title="demonstration" style="width:600px;"></a>
-
-Users in favor of shell can upload file through curl as well:
+Users in favor of shell can upload file through curl:
 
 	curl -F file1=@my.txt http://<server ip>:9999/upload
 
+Or launch a browser and navigate to the url <code><pre>http://<server ip>:9999/</pre></code>.
+
+<a href="src/main/resource/demo.jpg?raw=true" target="_blank"><img src="src/main/resource/demo.jpg?raw=true" alt="run demo" title="demonstration" style="width:600px;"></a>

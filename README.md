@@ -22,7 +22,7 @@ Start the executable file on the machine you want transfer files to:
 Once it started up successfully, you can upload files from other machines.
 
 Users in favor of shell can upload files through curl (replace the ip with your real ip):
-dd
+
 	curl -F file1=@my.txt http://192.168.1.112:9999/upload
 
 Or launch a browser and navigate to the url <code>http://192.168.1.112:9999/</code>.
